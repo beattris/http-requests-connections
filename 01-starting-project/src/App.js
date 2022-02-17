@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
@@ -8,7 +8,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  function fetchMoviesHandler() {
+  const fetchMoviesHandler = useCallback(() => {
     fetch('https://swapi.dev/api/films')
     .then(response => {
       setIsLoading(true)
@@ -31,7 +31,12 @@ function App() {
       setError(error)
       setIsLoading(false)
     })
-  }
+  }, []);
+
+   // USING useEffect TO CALL THE fetchMoviesHandler TO LOAD THE API WHEN THE CONDITIONS IN THE ARRAY CHANGES []
+  useEffect(() => {
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler])
 
   let content = <p>No movies fetched yet</p>
 
