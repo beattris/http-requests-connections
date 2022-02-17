@@ -5,10 +5,12 @@ import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   function fetchMoviesHandler() {
     fetch('https://swapi.dev/api/films')
     .then(response => {
+      setIsLoading(true)
       return response.json();
     }).then(data => {
       // TRANSFORMING THE API OBJECT KEYS TO MATCH OUR PROPS IN THE 'MoviesList.js' FILE
@@ -21,6 +23,7 @@ function App() {
         }
       })
       setMovies(transformedMovies)
+      setIsLoading(false)
     });
   }
 
@@ -30,7 +33,9 @@ function App() {
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>
-        <MoviesList movies={movies} />
+        {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
+        {!isLoading && movies.length === 0 && <p>No movies fetched yet</p>}
+        {isLoading && <p>Loading....</p>}
       </section>
     </React.Fragment>
   );
